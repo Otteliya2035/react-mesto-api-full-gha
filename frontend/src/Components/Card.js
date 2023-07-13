@@ -4,9 +4,10 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function Card(props) {
   const currentUser = useContext(CurrentUserContext);
-
-  const isOwn = props.card.owner._id === currentUser._id;
-  const isLikedBefore = props.card.likes.some((i) => i._id === currentUser._id);
+  const isOwn = (props.card.owner._id || props.card.owner) === currentUser._id
+  //const isOwn = props.card.owner === currentUser._id;
+  //const isLikedBefore = props.card.likes.some((i) => i._id === currentUser._id);
+  const isLikedBefore = props.card.likes.some((i) => i === currentUser._id);
   const [liked, setLiked] = useState(isLikedBefore);
   const [likesCount, setLikesCount] = useState(props.card.likes.length);
 

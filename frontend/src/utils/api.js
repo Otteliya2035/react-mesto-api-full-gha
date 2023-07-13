@@ -78,11 +78,11 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "https://localhost:4000",
+  baseUrl: "http://localhost:4000",
   headers: {
-    authorization: "6993a727-96ba-4996-a1f3-e62c6fb54cfd",
+    "Authorization": `Bearer ${localStorage.getItem('token')}`,
     "Content-Type": "application/json",
-  },
+  }
 });
 
 export default api;

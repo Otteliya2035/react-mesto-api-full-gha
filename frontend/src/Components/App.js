@@ -56,7 +56,7 @@ function App() {
         setCards(initialCards);
       })
       .catch((err) => console.log(err));
-  }, [isLoggedIn]);
+  }, []);
 
   function handleUpdateUser({ name, about }) {
     api
@@ -86,7 +86,7 @@ function App() {
     api
       .addNewCard({ name, link })
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards([newCard.data, ...cards]);
         closeAllPopups();
       })
       .catch((err) => {

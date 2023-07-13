@@ -114,7 +114,7 @@ const updateUserProfile = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
       } else {
-        res.status(200).send({ data: user });
+        res.status(200).send(user);
       }
     })
     .catch((err) => {
@@ -140,7 +140,7 @@ const updateUserAvatar = (req, res, next) => {
       if (!user) {
         next(new NotFoundError('Пользователь не найден'));
       } else {
-        res.status(200).send({ data: user });
+        res.status(200).send( user );
       }
     })
     .catch((err) => {
