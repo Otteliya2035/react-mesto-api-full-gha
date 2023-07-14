@@ -2,13 +2,14 @@ const express = require('express');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
 const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
-app.use(cors({ origin: 'https://otteliya.nomoredomains.work' }));
+// app.use(cors({ origin: 'https://otteliya.nomoredomains.work' }));
+app.use(cors);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
