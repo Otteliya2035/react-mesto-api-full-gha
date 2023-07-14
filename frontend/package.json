@@ -20,6 +20,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
+  "homepage": "https://otteliya.nomoredomains.work",
+
   "eslintConfig": {
     "extends": [
       "react-app",

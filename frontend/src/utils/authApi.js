@@ -41,5 +41,5 @@ class AuthApi {
   }
 }
 
-const authApi = new AuthApi("http://localhost:4000");
+const authApi = new AuthApi("http://api.otteliya.nomoredomains.work");
 export default authApi;
