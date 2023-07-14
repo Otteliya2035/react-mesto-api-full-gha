@@ -86,7 +86,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "http://api.otteliya.nomoredomains.work",
+  baseUrl: "https://api.otteliya.nomoredomains.work",
   headers: {
     "Content-Type": "application/json",
     authorization: `Bearer ${localStorage.getItem("token")}`,

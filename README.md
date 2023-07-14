@@ -11,6 +11,6 @@
 
 IP 158.160.12.114
 
-Frontend http://otteliya.nomoredomains.work
+Frontend https://otteliya.nomoredomains.work
 
-Backend http://api.otteliya.nomoredomains.work
+Backend https://api.otteliya.nomoredomains.work

@@ -41,5 +41,5 @@ class AuthApi {
   }
 }
 
-const authApi = new AuthApi("http://api.otteliya.nomoredomains.work");
+const authApi = new AuthApi("https://api.otteliya.nomoredomains.work");
 export default authApi;
