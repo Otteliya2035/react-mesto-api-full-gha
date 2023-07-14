@@ -4,6 +4,14 @@ class Api {
     this._headers = options.headers;
   }
 
+  setHeaders(headers) {
+    this._headers = headers
+  }
+
+  get headers() {
+    return this._headers;
+  }
+
   _checkResponse(res) {
     if (res.ok) {
       return res.json();
@@ -63,14 +71,14 @@ class Api {
   }
 
   addLikeCard(_id) {
-    return fetch(`${this._url}/cards/likes/${_id}`, {
+    return fetch(`${this._url}/cards/${_id}/likes/`, {
       method: "PUT",
       headers: this._headers,
     }).then((res) => this._checkResponse(res));
   }
 
   deleteLikeCard(_id) {
-    return fetch(`${this._url}/cards/likes/${_id}`, {
+    return fetch(`${this._url}/cards/${_id}/likes`, {
       method: "DELETE",
       headers: this._headers,
     }).then((res) => this._checkResponse(res));
@@ -80,7 +88,6 @@ class Api {
 const api = new Api({
   baseUrl: "http://localhost:4000",
   headers: {
-    "Authorization": `Bearer ${localStorage.getItem('token')}`,
     "Content-Type": "application/json",
   }
 });

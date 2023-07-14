@@ -29,34 +29,40 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
 
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
+
   const [isRegistrationSuccessful, setIsRegistrationSuccessful] =
     useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setIsLoggedIn(true);
       authApi
         .checkToken(token)
-        .then(({ data }) => {
-          setIsLoggedIn(true);
-          setHeaderEmail(data.email);
-          navigate("/");
+        .then((data) => {
+          if(data) {
+            setIsLoggedIn(true);
+            setHeaderEmail(data.email);
+            api.setHeaders({
+              ...api.headers,
+              "Authorization": `Bearer ${token}`,
+            })
+            navigate("/");
+
+            Promise.all([api.getUserInfo(), api.getInitialCards()])
+              .then(([userData, initialCards]) => {
+                setCurrentUser(userData);
+                setCards(initialCards.reverse());
+              })
+              .catch((err) => console.log(err));
+          }
         })
         .catch((error) => {
           console.log(error);
           setIsLoggedIn(false);
           setHeaderEmail("");
-        });
+        })
     }
-
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userData, initialCards]) => {
-        setCurrentUser(userData);
-        setCards(initialCards);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  }, [isLoggedIn]);
 
   function handleUpdateUser({ name, about }) {
     api
@@ -125,7 +131,7 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((like) => like._id === currentUser._id);
+    const isLiked = card.likes.some((like) => like === currentUser._id);
 
     if (isLiked) {
       api
