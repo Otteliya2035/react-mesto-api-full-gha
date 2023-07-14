@@ -42,15 +42,12 @@ function App() {
           if(data) {
             setIsLoggedIn(true);
             setHeaderEmail(data.email);
-            api.setHeaders({
-              ...api.headers,
-              "Authorization": `Bearer ${token}`,
-            })
             navigate("/");
 
             Promise.all([api.getUserInfo(), api.getInitialCards()])
               .then(([userData, initialCards]) => {
                 setCurrentUser(userData);
+                console.log(initialCards)
                 setCards(initialCards.reverse());
               })
               .catch((err) => console.log(err));
@@ -64,9 +61,9 @@ function App() {
     }
   }, [isLoggedIn]);
 
-  function handleUpdateUser({ name, about }) {
+  function handleUpdateUser(newUserInfo) {
     api
-      .setUserInfo({ name, description: about })
+      .setUserInfo(newUserInfo)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();

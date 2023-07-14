@@ -1,96 +1,110 @@
 class Api {
   constructor(options) {
-    this._url = options.baseUrl;
-    this._headers = options.headers;
+    this._baseUrl = options.baseUrl;
   }
 
-  setHeaders(headers) {
-    this._headers = headers
-  }
-
-  get headers() {
-    return this._headers;
-  }
-
-  _checkResponse(res) {
+  _handleResponse(res) {
     if (res.ok) {
-      return res.json();
+      return Promise.resolve(res.json());
     }
+
     return Promise.reject(`Ошибка: ${res.status}`);
   }
 
-  getUserInfo() {
-    return fetch(`${this._url}/users/me`, { headers: this._headers }).then(
-      (res) => this._checkResponse(res)
-    );
-  }
-
-  setUserInfo({ name, description }) {
-    return fetch(`${this._url}/users/me`, {
+  async setUserInfo(data) {
+    const response = await fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: JSON.stringify({
-        name: name,
-        about: description,
+        name: data.name,
+        about: data.about,
       }),
-    }).then((res) => this._checkResponse(res));
+    });
+    return this._handleResponse(response);
+  }
+  async getUserInfo() {
+    const response = await fetch(`${this._baseUrl}/users/me`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return this._handleResponse(response);
+  }
+  async getInitialCards() {
+    const response = await fetch(`${this._baseUrl}/cards`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return this._handleResponse(response);
   }
 
-  setUserAvatar({ avatar }) {
-    return fetch(`${this._url}/users/me/avatar`, {
-      method: "PATCH",
-      headers: this._headers,
-      body: JSON.stringify({
-        avatar: avatar,
-      }),
-    }).then((res) => this._checkResponse(res));
-  }
-
-  getInitialCards() {
-    return fetch(`${this._url}/cards`, { headers: this._headers }).then((res) =>
-      this._checkResponse(res)
-    );
-  }
-
-  addNewCard({ name, link }) {
-    return fetch(`${this._url}/cards`, {
+  async addNewCard(data) {
+    const response = await fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers,
-      body: JSON.stringify({
-        name: name,
-        link: link,
-      }),
-    }).then((res) => this._checkResponse(res));
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify(data),
+    });
+    return this._handleResponse(response);
   }
 
-  deleteCard(cardId) {
-    return fetch(`${this._url}/cards/${cardId}`, {
+  async deleteCard(cardId) {
+    const response = await fetch(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
-    }).then((res) => this._checkResponse(res));
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return this._handleResponse(response);
   }
-
-  addLikeCard(_id) {
-    return fetch(`${this._url}/cards/${_id}/likes/`, {
+  async  addLikeCard(cardId) {
+    const response = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
-      headers: this._headers,
-    }).then((res) => this._checkResponse(res));
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return this._handleResponse(response);
   }
 
-  deleteLikeCard(_id) {
-    return fetch(`${this._url}/cards/${_id}/likes`, {
+  async deleteLikeCard(cardId) {
+    const response = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "DELETE",
-      headers: this._headers,
-    }).then((res) => this._checkResponse(res));
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return this._handleResponse(response);
+  }
+
+  async  setUserAvatar(data) {
+    const response = await fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        avatar: data.avatar,
+      }),
+    });
+    return this._handleResponse(response);
   }
 }
 
 const api = new Api({
   baseUrl: "https://api.otteliya.nomoredomains.work",
-  headers: {
-    "Content-Type": "application/json",
-    authorization: `Bearer ${localStorage.getItem("token")}`,
-  }
 });
 
 export default api;
