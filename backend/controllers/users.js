@@ -5,6 +5,8 @@ const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 
+const { NODE_ENV, SECRET_DEV_KEY } = require('../utils/constants');
+
 // Получение всех пользователей
 const getUsers = (req, res, next) => {
   User.find({})
@@ -151,7 +153,8 @@ const updateUserAvatar = (req, res, next) => {
       next(err);
     });
 };
-const login = (req, res, next) => {
+
+/* const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -162,7 +165,21 @@ const login = (req, res, next) => {
       res.send({ token });
     })
     .catch(next);
+}; */
+
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      // создадим токен
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? SECRET_DEV_KEY : 'some-secret-key', { expiresIn: '7d' });
+      // вернём токен
+      res.send({ token });
+    })
+    .catch(next);
 };
+
 module.exports = {
   updateUserProfile,
   updateUserAvatar,

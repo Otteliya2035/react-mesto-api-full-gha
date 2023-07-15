@@ -1,25 +1,34 @@
+// Подключение dotenv, чтобы секретный
+// ключ из файла env работал
+require('dotenv').config();
 const express = require('express');
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const cors = require('./middlewares/cors');
 const errorHandler = require('./middlewares/errorHandler');
 const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+// Безопасность приложения
+
 const app = express();
-// app.use(cors({ origin: 'https://otteliya.nomoredomains.work' }));
+app.use(helmet());
 app.use(cors);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+
 app.use('/', routes);
 app.use(errorLogger);
 app.use(errors()); // Обработчик ошибок от celebrate
 app.use(errorHandler);
 
+const URL = 'mongodb://127.0.0.1:27017/mestodb';
+
 mongoose
-  .connect('mongodb://127.0.0.1:27017/mestodb')
+  .connect(URL)
   .then(() => {
     console.log('Connected to MongoDB');
   })
